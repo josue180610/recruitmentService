@@ -163,7 +163,7 @@
 			<artifactId>spring-boot-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-test-autoconfigure</artifactId>
@@ -175,7 +175,24 @@
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		 	
+		<!-- azure storage -->  
+    <dependency> 
+      <groupId>com.microsoft.azure</groupId>  
+      <artifactId>azure-storage-spring-boot-starter</artifactId>  
+      <version>2.0.5</version> 
+    </dependency> 
+		 	<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+	<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-data-jpa</artifactId>
+	    <version>2.2.1.RELEASE</version>
+	</dependency>
 	</dependencies>
 
 	<build>
@@ -221,6 +238,9 @@
 								<ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-actuator:jar::</ignoredUnusedDeclaredDependency>
 								<ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-test:jar::</ignoredUnusedDeclaredDependency>
 								<ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-webflux:jar::</ignoredUnusedDeclaredDependency>
+								<ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot-starter-data-jpa:jar::</ignoredUnusedDeclaredDependency>
+								
+																	
 							</ignoredUnusedDeclaredDependencies>
 						</configuration>
 					</execution>
@@ -262,6 +282,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin> 
+        <groupId>com.microsoft.azure</groupId>  
+        <artifactId>azure-webapp-maven-plugin</artifactId>  
+        <version>1.9.0</version>  
+        </plugin>
 		</plugins>
 	</build>
 
