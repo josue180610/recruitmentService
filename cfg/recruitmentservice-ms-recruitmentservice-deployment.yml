@@ -1,0 +1,69 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ms-ne-recruitmentservice-recruitmentservice
+  namespace: recruitmentservice
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ms-ne-recruitmentservice-recruitmentservice
+    spec:
+      containers:
+        - name: ms-ne-recruitmentservice-recruitmentservice
+          image: acrgenesis.azurecr.io/ms-ne-recruitmentservice-recruitmentservice:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+           - name: ENV
+             value: ambiente
+      imagePullSecrets:
+        - name: acr-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-ne-recruitmentservice-recruitmentservice-svc
+  namespace: genesis
+  labels:
+    app: "ms-ne-recruitmentservice-recruitmentservice"
+spec:
+  ports:
+    - port: 4041
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: ms-ne-recruitmentservice-recruitmentservice
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ms-ne-recruitmentservice-recruitmentservice-ingress-nginx
+  namespace: genesis
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "request-id, request-date, content-type"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, DELETE, PATCH, OPTIONS"
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Ingress: $ingress_name";
+spec:
+  tls:
+    - hosts:
+        - aks-recruitmentservice-ingress-cert.eastus2.cloudapp.azure.com
+      secretName: ms-ne-recruitmentservice-recruitmentservice-ingress-secret
+  rules:
+    - host: aks-recruitmentservice-ingress-cert.eastus2.cloudapp.azure.com
+      http:
+        paths:
+          - backend:
+              serviceName: ms-ne-recruitmentservice-recruitmentservice-svc
+              servicePort: 4041
+            path: /recruitmentservice/recruitmentservice/(.*)
